@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -21,6 +20,12 @@ export default {
     extend: {
       colors: {
         background: "#000000", // Black background
+        weather: {
+          sun: "#FFD700",     // Weather icon colors
+          rain: "#00BFFF",
+          cloud: "#E0E0E0",
+          thunder: "#FFB700"
+        },
         neon: {
           turquoise: "#00FFD1", // Neon Turquoise
           purple: "#8A4FFF",    // Vibrant Purple
@@ -46,11 +51,6 @@ export default {
           foreground: "#FFFFFF"
         }
       },
-      borderRadius: {
-        lg: "0.75rem",
-        md: "calc(0.75rem - 2px)",
-        sm: "calc(0.75rem - 4px)"
-      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -67,12 +67,17 @@ export default {
           "50%": { 
             textShadow: "0 0 10px rgba(0, 255, 209, 1), 0 0 20px rgba(0, 255, 209, 0.8)" 
           }
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" }
         }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "glow": "glow 2s ease-in-out infinite"
+        "glow": "glow 2s ease-in-out infinite",
+        "float": "float 3s ease-in-out infinite"
       }
     },
   },
