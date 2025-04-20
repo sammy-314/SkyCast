@@ -2,15 +2,17 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { WeatherData } from "@/services/weatherApi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Droplet, Thermometer, Wind } from "lucide-react";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Pie, PieChart, ResponsiveContainer, Sector, Tooltip, XAxis, YAxis } from "recharts";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface WeatherChartsProps {
   data: WeatherData;
 }
 
 const WeatherCharts = ({ data }: WeatherChartsProps) => {
+  const isMobile = useIsMobile();
+  
   if (!data || !data.forecast || !data.forecast.forecastday[0]) return null;
 
   const hourlyData = data.forecast.forecastday[0].hour;
@@ -51,13 +53,16 @@ const WeatherCharts = ({ data }: WeatherChartsProps) => {
   }));
 
   // Air quality data if available
-  const hasAirQuality = data.current && data.current.air_quality && data.current.air_quality['us-epa-index'];
+  const hasAirQuality = data.current && data.current.air_quality && 'us-epa-index' in data.current.air_quality;
   const airQualityData = hasAirQuality ? [
     { name: 'Good', value: data.current.air_quality['us-epa-index'] === 1 ? 100 : 0 },
     { name: 'Moderate', value: data.current.air_quality['us-epa-index'] === 2 ? 100 : 0 },
     { name: 'Unhealthy', value: data.current.air_quality['us-epa-index'] === 3 ? 100 : 0 },
     { name: 'Severe', value: data.current.air_quality['us-epa-index'] >= 4 ? 100 : 0 },
   ] : [];
+
+  // Chart height based on device
+  const chartHeight = isMobile ? 200 : 250;
 
   return (
     <Card className="glass-card">
@@ -72,21 +77,21 @@ const WeatherCharts = ({ data }: WeatherChartsProps) => {
       <CardContent>
         <Tabs defaultValue="temperature" className="w-full">
           <TabsList className="grid grid-cols-3 mb-4">
-            <TabsTrigger value="temperature" className="flex items-center gap-1">
-              <Thermometer className="h-4 w-4" /> Temperature
+            <TabsTrigger value="temperature" className="flex items-center gap-1 text-xs sm:text-sm">
+              <Thermometer className="h-3 w-3 sm:h-4 sm:w-4" /> Temperature
             </TabsTrigger>
-            <TabsTrigger value="wind" className="flex items-center gap-1">
-              <Wind className="h-4 w-4" /> Wind
+            <TabsTrigger value="wind" className="flex items-center gap-1 text-xs sm:text-sm">
+              <Wind className="h-3 w-3 sm:h-4 sm:w-4" /> Wind
             </TabsTrigger>
-            <TabsTrigger value="precipitation" className="flex items-center gap-1">
-              <Droplet className="h-4 w-4" /> Precipitation
+            <TabsTrigger value="precipitation" className="flex items-center gap-1 text-xs sm:text-sm">
+              <Droplet className="h-3 w-3 sm:h-4 sm:w-4" /> Precipitation
             </TabsTrigger>
           </TabsList>
           
           <TabsContent value="temperature" className="mt-0">
-            <div className="h-[250px] mt-2">
+            <div className={`h-[${chartHeight}px] mt-2`}>
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={temperatureData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                <AreaChart data={temperatureData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#444" />
                   <XAxis dataKey="name" stroke="#888" />
                   <YAxis stroke="#888" />
@@ -110,9 +115,9 @@ const WeatherCharts = ({ data }: WeatherChartsProps) => {
           </TabsContent>
 
           <TabsContent value="wind" className="mt-0">
-            <div className="h-[250px] mt-2">
+            <div className={`h-[${chartHeight}px] mt-2`}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={windData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                <BarChart data={windData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#444" />
                   <XAxis dataKey="name" stroke="#888" />
                   <YAxis stroke="#888" />
@@ -136,9 +141,9 @@ const WeatherCharts = ({ data }: WeatherChartsProps) => {
           </TabsContent>
 
           <TabsContent value="precipitation" className="mt-0">
-            <div className="h-[250px] mt-2">
+            <div className={`h-[${chartHeight}px] mt-2`}>
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={precipData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                <AreaChart data={precipData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#444" />
                   <XAxis dataKey="name" stroke="#888" />
                   <YAxis stroke="#888" />
