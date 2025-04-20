@@ -89,7 +89,7 @@ const WeatherCharts = ({ data }: WeatherChartsProps) => {
           </TabsList>
           
           <TabsContent value="temperature" className="mt-0">
-            <div className={`h-[${chartHeight}px] mt-2`}>
+            <div style={{ height: chartHeight }} className="mt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={temperatureData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#444" />
@@ -115,7 +115,7 @@ const WeatherCharts = ({ data }: WeatherChartsProps) => {
           </TabsContent>
 
           <TabsContent value="wind" className="mt-0">
-            <div className={`h-[${chartHeight}px] mt-2`}>
+            <div style={{ height: chartHeight }} className="mt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={windData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#444" />
@@ -141,7 +141,7 @@ const WeatherCharts = ({ data }: WeatherChartsProps) => {
           </TabsContent>
 
           <TabsContent value="precipitation" className="mt-0">
-            <div className={`h-[${chartHeight}px] mt-2`}>
+            <div style={{ height: chartHeight }} className="mt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={precipData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#444" />
@@ -195,13 +195,17 @@ const WeatherCharts = ({ data }: WeatherChartsProps) => {
                   </Pie>
                   <Tooltip 
                     content={({ active, payload }) => {
-                      if (active && payload && payload.length && payload[0].value > 0) {
-                        return (
-                          <div className="bg-background/80 backdrop-blur-sm p-2 border border-border rounded">
-                            <p className="text-sm font-bold">{payload[0].name}</p>
-                            <p className="text-xs">Air Quality Index</p>
-                          </div>
-                        );
+                      if (active && payload && payload.length) {
+                        // Fix: Use a proper type check instead of direct numeric comparison
+                        const numValue = payload[0].value ? Number(payload[0].value) : 0;
+                        if (numValue > 0) {
+                          return (
+                            <div className="bg-background/80 backdrop-blur-sm p-2 border border-border rounded">
+                              <p className="text-sm font-bold">{payload[0].name}</p>
+                              <p className="text-xs">Air Quality Index</p>
+                            </div>
+                          );
+                        }
                       }
                       return null;
                     }}
