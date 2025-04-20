@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { WeatherData } from "@/services/weatherApi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -55,10 +54,10 @@ const WeatherCharts = ({ data }: WeatherChartsProps) => {
   // Air quality data if available
   const hasAirQuality = data.current && data.current.air_quality && 'us-epa-index' in data.current.air_quality;
   const airQualityData = hasAirQuality ? [
-    { name: 'Good', value: data.current.air_quality['us-epa-index'] === 1 ? 100 : 0 },
-    { name: 'Moderate', value: data.current.air_quality['us-epa-index'] === 2 ? 100 : 0 },
-    { name: 'Unhealthy', value: data.current.air_quality['us-epa-index'] === 3 ? 100 : 0 },
-    { name: 'Severe', value: data.current.air_quality['us-epa-index'] >= 4 ? 100 : 0 },
+    { name: 'Good', value: data.current.air_quality['us-epa-index'] === 1 ? 1 : 0 },
+    { name: 'Moderate', value: data.current.air_quality['us-epa-index'] === 2 ? 1 : 0 },
+    { name: 'Unhealthy', value: data.current.air_quality['us-epa-index'] === 3 ? 1 : 0 },
+    { name: 'Severe', value: data.current.air_quality['us-epa-index'] >= 4 ? 1 : 0 },
   ] : [];
 
   // Chart height based on device
