@@ -21,25 +21,25 @@ const ForecastCard = ({ date, minTemp, maxTemp, condition, chanceOfRain }: Forec
   });
 
   return (
-    <Card className="weather-card transition-all duration-300 hover:scale-105">
+    <Card className="weather-card">
       <CardContent className="p-3 flex flex-col items-center">
-        <p className="text-sm font-medium text-neon-turquoise">{formattedDate}</p>
+        <p className="text-sm font-medium">{formattedDate}</p>
         <div className="my-2">
-          <WeatherIcon conditionCode={condition.code} size={32} className="text-weather-sun" />
+          <WeatherIcon conditionCode={condition.code} size={32} className="text-white" />
         </div>
         <p className="text-xs text-white/70 text-center mb-2">{condition.text}</p>
         <div className="flex items-center justify-between w-full">
-          <span className="text-sm text-neon-blue">{Math.round(minTemp)}°</span>
+          <span className="text-sm text-white/70">{Math.round(minTemp)}°</span>
           <div className="w-full mx-2 h-1 bg-white/10 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-neon-blue to-neon-orange rounded-full transition-all duration-300"
+              className="h-full bg-gradient-to-r from-blue-500 to-orange-500 rounded-full"
               style={{ width: `${(Math.round(maxTemp) / 50) * 100}%` }}
             ></div>
           </div>
-          <span className="text-sm text-neon-orange">{Math.round(maxTemp)}°</span>
+          <span className="text-sm">{Math.round(maxTemp)}°</span>
         </div>
         {chanceOfRain > 0 && (
-          <div className="mt-2 text-xs text-neon-purple">
+          <div className="mt-2 text-xs text-weather-rain">
             {chanceOfRain}% chance of rain
           </div>
         )}
