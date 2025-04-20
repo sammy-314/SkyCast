@@ -2,8 +2,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { WeatherData } from "@/services/weatherApi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AreaChart, BarChart, PieChart } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Droplet, Thermometer, Wind } from "lucide-react";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Pie, PieChart, ResponsiveContainer, Sector, Tooltip, XAxis, YAxis } from "recharts";
 
 interface WeatherChartsProps {
   data: WeatherData;
@@ -84,46 +85,80 @@ const WeatherCharts = ({ data }: WeatherChartsProps) => {
           
           <TabsContent value="temperature" className="mt-0">
             <div className="h-[250px] mt-2">
-              <AreaChart
-                data={temperatureData}
-                categories={["temperature"]}
-                index="name"
-                colors={["#F97316"]}
-                valueFormatter={(value) => `${value}°C`}
-                showAnimation={true}
-                animationDuration={1000}
-                className="h-full"
-              />
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={temperatureData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                  <XAxis dataKey="name" stroke="#888" />
+                  <YAxis stroke="#888" />
+                  <Tooltip 
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-background/80 backdrop-blur-sm p-2 border border-border rounded">
+                            <p className="text-sm">{`${payload[0].payload.name}`}</p>
+                            <p className="text-sm font-bold text-orange-500">{`${payload[0].value}°C`}</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Area type="monotone" dataKey="temperature" stroke="#F97316" fill="#F97316" fillOpacity={0.3} />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
           </TabsContent>
 
           <TabsContent value="wind" className="mt-0">
             <div className="h-[250px] mt-2">
-              <BarChart
-                data={windData}
-                categories={["wind"]}
-                index="name"
-                colors={["#8B5CF6"]}
-                valueFormatter={(value) => `${value} km/h`}
-                showAnimation={true}
-                animationDuration={1000}
-                className="h-full"
-              />
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={windData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                  <XAxis dataKey="name" stroke="#888" />
+                  <YAxis stroke="#888" />
+                  <Tooltip 
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-background/80 backdrop-blur-sm p-2 border border-border rounded">
+                            <p className="text-sm">{`${payload[0].payload.name}`}</p>
+                            <p className="text-sm font-bold text-purple-500">{`${payload[0].value} km/h`}</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Bar dataKey="wind" fill="#8B5CF6" />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </TabsContent>
 
           <TabsContent value="precipitation" className="mt-0">
             <div className="h-[250px] mt-2">
-              <AreaChart
-                data={precipData}
-                categories={["precipitation"]}
-                index="name"
-                colors={["#0EA5E9"]}
-                valueFormatter={(value) => `${value} mm`}
-                showAnimation={true}
-                animationDuration={1000}
-                className="h-full"
-              />
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={precipData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                  <XAxis dataKey="name" stroke="#888" />
+                  <YAxis stroke="#888" />
+                  <Tooltip 
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-background/80 backdrop-blur-sm p-2 border border-border rounded">
+                            <p className="text-sm">{`${payload[0].payload.name}`}</p>
+                            <p className="text-sm font-bold text-blue-500">{`${payload[0].value} mm`}</p>
+                            <p className="text-xs text-blue-300">{`${payload[0].payload.chance}% chance of rain`}</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Area type="monotone" dataKey="precipitation" stroke="#0EA5E9" fill="#0EA5E9" fillOpacity={0.3} />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
           </TabsContent>
         </Tabs>
@@ -132,16 +167,42 @@ const WeatherCharts = ({ data }: WeatherChartsProps) => {
           <div className="mt-6">
             <h3 className="text-sm font-medium mb-2">Air Quality Index</h3>
             <div className="h-[200px]">
-              <PieChart
-                data={airQualityData}
-                category="value"
-                index="name"
-                colors={["#22c55e", "#f59e0b", "#ef4444", "#7c3aed"]}
-                valueFormatter={(value) => `${value}%`}
-                showAnimation={true}
-                animationDuration={1000}
-                className="h-full"
-              />
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={airQualityData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={40}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {airQualityData.map((entry, index) => {
+                      const colors = ["#22c55e", "#f59e0b", "#ef4444", "#7c3aed"];
+                      return (
+                        <Sector 
+                          key={`cell-${index}`} 
+                          fill={colors[index % colors.length]}
+                        />
+                      )
+                    })}
+                  </Pie>
+                  <Tooltip 
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length && payload[0].value > 0) {
+                        return (
+                          <div className="bg-background/80 backdrop-blur-sm p-2 border border-border rounded">
+                            <p className="text-sm font-bold">{payload[0].name}</p>
+                            <p className="text-xs">Air Quality Index</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </div>
         )}

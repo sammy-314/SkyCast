@@ -12,8 +12,8 @@ const CurrentWeather = ({ data }: CurrentWeatherProps) => {
   if (!data) return null;
 
   const { current, location } = data;
-  const isDay = location.localtime.split(' ')[1].split(':')[0] > 6 && 
-                location.localtime.split(' ')[1].split(':')[0] < 18;
+  const hourOfDay = parseInt(location.localtime.split(' ')[1].split(':')[0], 10);
+  const isDay = hourOfDay > 6 && hourOfDay < 18;
 
   return (
     <Card className="w-full overflow-hidden glass-card">
